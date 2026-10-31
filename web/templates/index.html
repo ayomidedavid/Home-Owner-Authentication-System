@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haven Home Security — Smart Protection & Family Access</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --surface: #15181e;
+      --surface-hover: #1c2028;
+      --surface-elevated: #1e222b;
+      --border: #262a34;
+      --border-subtle: #1e222b;
+      --text-main: #f3f4f6;
+      --text-muted: #949ba8;
+      --text-faint: #626978;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #10b981;
+      --green-bg: rgba(16, 185, 129, 0.12);
+      --amber: #f59e0b;
+      --amber-bg: rgba(245, 158, 11, 0.12);
+      --red: #ef4444;
+      --red-bg: rgba(239, 68, 68, 0.15);
+      --radius: 12px;
+    }
+
+    body.light-mode {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --surface-elevated: #ffffff;
+      --border: #e2e8f0;
+      --border-subtle: #edf2f7;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-faint: #94a3b8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --green: #059669;
+      --green-bg: rgba(16, 185, 129, 0.12);
+      --amber: #d97706;
+      --amber-bg: rgba(245, 158, 11, 0.12);
+      --red: #dc2626;
+      --red-bg: rgba(239, 68, 68, 0.12);
+    }
+
+    body.light-mode .brand-logo {
+      background: #eff6ff;
+      border-color: #dbeafe;
+      color: #2563eb;
+    }
+    body.light-mode .mode-switch {
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+    }
+    body.light-mode .mode-btn.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    body.light-mode .tabs-nav {
+      background: #f8fafc;
+    }
+    body.light-mode .tab-item.active {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    body.light-mode .form-input {
+      background: #ffffff;
+      border-color: #cbd5e1;
+      color: #0f172a;
+    }
+    body.light-mode .form-input:focus {
+      border-color: #3b82f6;
+    }
+    body.light-mode .card {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .settings-section,
+    body.light-mode .family-card,
+    body.light-mode .event-item,
+    body.light-mode .sim-card,
+    body.light-mode .key-btn {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+    body.light-mode .key-btn:hover,
+    body.light-mode .sim-card:hover {
+      background: #f1f5f9;
+    }
+    body.light-mode .modal-box {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      color: #0f172a;
+    }
+    body.light-mode .modal-header h3,
+    body.light-mode .card-title,
+    body.light-mode .brand-title,
+    body.light-mode .family-info h4,
+    body.light-mode .sim-card h5 {
+      color: #0f172a !important;
+    }
+    body.light-mode .metric-val {
+      color: #0f172a;
+    }
+    body.light-mode .metric-box {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+    body.light-mode .btn-icon {
+      background: #f1f5f9;
+      border-color: #e2e8f0;
+      color: #475569;
+    }
+    body.light-mode .btn-icon:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: #1e2430;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 16px;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* System Status & Arming Controls */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .status-pill.disarmed {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-pill.armed-away {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-pill.armed-home {
+      background: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-pill.alert {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red);
+      animation: alertPulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Segmented Mode Switcher */
+    .mode-switch {
+      display: flex;
+      background: #0f1115;
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      gap: 2px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .mode-btn:hover {
+      color: var(--text-main);
+    }
+
+    .mode-btn.active {
+      background: var(--surface-elevated);
+      color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .btn-panic {
+      background: #dc2626;
+      color: #fff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-panic:hover {
+      background: #b91c1c;
+    }
+
+    .btn-silence {
+      background: #374151;
+      color: #fbbf24;
+      border: 1px solid #d97706;
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      background: #1c2028;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s;
+    }
+    .btn-icon:hover {
+      color: #fff;
+      background: #252b36;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1560px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1080px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 16px;
+      }
+    }
+
+    /* Camera Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Camera Viewport */
+    .video-viewport {
+      background: #000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 420px;
+      overflow: hidden;
+    }
+
+    .video-viewport img {
+      width: 100%;
+      height: auto;
+      max-height: 520px;
+      display: block;
+      object-contain: contain;
+    }
+
+    .camera-live-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Quick stats below camera */
+    .camera-footer {
+      padding: 12px 18px;
+      background: #111419;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      text-align: center;
+    }
+
+    .metric-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 8px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .metric-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Right Side: Tabbed Panel */
+    .tabs-nav {
+      display: flex;
+      background: #0f1115;
+      padding: 4px;
+      border-bottom: 1px solid var(--border);
+      gap: 4px;
+    }
+
+    .tab-item {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .tab-item:hover {
+      color: #fff;
+    }
+
+    .tab-item.active {
+      background: var(--surface-elevated);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    }
+
+    .tab-pane {
+      padding: 20px;
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    /* Household / Family Grid */
+    .family-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .family-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .family-card {
+      background: #111419;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .family-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid var(--border);
+    }
+
+    .family-info h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .family-role {
+      font-size: 11px;
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    .btn-delete-member {
+      background: transparent;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+    .btn-delete-member:hover {
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Event Timeline */
+    .event-item {
+      background: #111419;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .event-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .event-details h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ef4444;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .event-tag {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 4px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    /* Settings Form */
+    .settings-section {
+      background: #111419;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #93c5fd;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #171b22;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+      transition: border 0.15s;
+    }
+
+    .form-input:focus {
+      border-color: #3b82f6;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Simulator / Test Drawer */
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .sim-card {
+      background: #111419;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .sim-card:hover {
+      background: #171c24;
+      border-color: #3b82f6;
+    }
+    .sim-card h5 {
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .sim-card p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 440px;
+      width: 100%;
+      padding: 22px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .modal-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    /* Keypad */
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .key-btn {
+      background: #1c2028;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .key-btn:hover {
+      background: #282e3b;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #2a303c;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">
+        <i class="fa-solid fa-shield"></i>
+      </div>
+      <div>
+        <div class="brand-title">Haven Home Security</div>
+        <div class="brand-subtitle">Smart Intrusion Detection & Family Recognition</div>
+      </div>
+    </div>
+
+    <!-- System Controls -->
+    <div class="header-actions">
+      <!-- Status Badge -->
+      <div id="statusBadge" class="status-pill disarmed">
+        <span class="status-dot"></span>
+        <span id="statusText">System Ready</span>
+      </div>
+
+      <!-- Segmented Mode Controls -->
+      <div class="mode-switch">
+        <button id="btnModeDisarmed" onclick="openPinModal('disarm')" class="mode-btn active" title="System disarmed, notifications off">
+          <i class="fa-solid fa-lock-open"></i> Off
+        </button>
+        <button id="btnModeHome" onclick="requestArm('ARMED_HOME')" class="mode-btn" title="Arm Home: Perimeter protection">
+          <i class="fa-solid fa-house-user"></i> Home
+        </button>
+        <button id="btnModeAway" onclick="requestArm('ARMED_AWAY')" class="mode-btn" title="Arm Away: Full detection">
+          <i class="fa-solid fa-person-walking-arrow-right"></i> Away
+        </button>
+      </div>
+
+      <!-- Panic / Siren -->
+      <button onclick="triggerPanic()" class="btn-panic" title="Immediate Emergency Alarm">
+        <i class="fa-solid fa-bell"></i> Panic
+      </button>
+      <button id="sirenSilenceBtn" onclick="silenceSiren()" class="btn-silence">
+        <i class="fa-solid fa-volume-xmark"></i> Silence
+      </button>
+
+      <!-- Theme Switcher (Light / Dark) -->
+      <button id="themeToggleBtn" onclick="toggleTheme()" class="btn-icon" title="Toggle Light / Dark Mode">
+        <i class="fa-solid fa-sun"></i>
+      </button>
+
+      <!-- Audio Mute -->
+      <button id="audioToggleBtn" onclick="toggleAudio()" class="btn-icon" title="Toggle Alarm Sound">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main>
+
+    <!-- LEFT COLUMN: LIVE FEED & RECENT ACTIVITY -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <span>Front Entrance Camera</span>
+          </div>
+          <div class="card-subtitle" id="cameraSourceLabel">Connected via Local Video Stream</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button onclick="snapToEnrollModal()" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">
+            <i class="fa-solid fa-camera"></i> Snapshot Face
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Video Viewport -->
+      <div class="video-viewport">
+        <div class="camera-live-badge">
+          <span class="live-dot"></span> LIVE
+        </div>
+        <img id="liveVideo" src="/video_feed" alt="Camera Stream">
+      </div>
+
+      <!-- Status Footer Metrics -->
+      <div class="camera-footer">
+        <div class="metric-box">
+          <div class="metric-label">Household Members</div>
+          <div class="metric-val" id="statFamilyCount" style="color: #34d399;">0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Unrecognized Events</div>
+          <div class="metric-val" id="statIntruderCount" style="color: #f87171;">0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Owner Email Alerts</div>
+          <div class="metric-val" id="statEmailsCount" style="color: #60a5fa;">0</div>
+        </div>
+      </div>
+
+      <!-- System Testing Tools (Clean, Real-World Diagnostics) -->
+      <div style="padding: 16px; border-top: 1px solid var(--border); background: #0f1115;">
+        <div style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">
+          <i class="fa-solid fa-wrench" style="margin-right: 4px;"></i> System Diagnostics & Simulation
+        </div>
+        <p style="font-size: 11px; color: var(--text-faint);">Test recognition and alerting without needing people in front of the camera.</p>
+        
+        <div class="sim-grid">
+          <div class="sim-card" onclick="simulateIntruder()">
+            <h5 style="color: #f87171;"><i class="fa-solid fa-user-xmark"></i> Test Intruder</h5>
+            <p>Simulates unknown visitor. Verifies photo capture and email dispatch.</p>
+          </div>
+          <div class="sim-card" onclick="simulateFamily()">
+            <h5 style="color: #34d399;"><i class="fa-solid fa-user-check"></i> Test Family</h5>
+            <p>Simulates registered family return. Confirms safe recognition.</p>
+          </div>
+          <div class="sim-card" onclick="clearSimulation()">
+            <h5><i class="fa-solid fa-arrow-rotate-left"></i> Reset Feed</h5>
+            <p>Clears simulated subjects back to idle room.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: MANAGEMENT TABS -->
+    <section class="card" style="min-height: 580px;">
+      <!-- Tab Header -->
+      <div class="tabs-nav">
+        <button onclick="switchTab('familyTab')" id="tabBtn-family" class="tab-item active">
+          <i class="fa-solid fa-users"></i> Household
+        </button>
+        <button onclick="switchTab('eventsTab')" id="tabBtn-events" class="tab-item">
+          <i class="fa-solid fa-clock-rotate-left"></i> Activity Log
+        </button>
+        <button onclick="switchTab('settingsTab')" id="tabBtn-settings" class="tab-item">
+          <i class="fa-solid fa-sliders"></i> Settings & DB
+        </button>
+      </div>
+
+      <!-- TAB 1: HOUSEHOLD / FAMILY ROSTER -->
+      <div id="familyTab" class="tab-pane active custom-scroll">
+        <div class="family-header">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 700; color: #fff;">Household Roster</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Faces enrolled here are recognized as authorized occupants.</p>
+          </div>
+          <button onclick="openEnrollModal()" class="btn-primary">
+            <i class="fa-solid fa-plus"></i> Add Person
+          </button>
+        </div>
+
+        <div id="familyList" class="family-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 2: ACTIVITY / INTRUSION LOG -->
+      <div id="eventsTab" class="tab-pane custom-scroll">
+        <div class="family-header">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 700; color: #fff;">Security Incidents</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Timestamped captures of unrecognized visitors.</p>
+          </div>
+          <button onclick="loadEvents()" class="btn-icon" title="Refresh">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+        </div>
+
+        <div id="eventsListContainer">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- TAB 3: SETTINGS & DATABASE -->
+      <div id="settingsTab" class="tab-pane custom-scroll">
+        <form onsubmit="saveSettings(event)">
+          
+          <!-- Homeowner Details -->
+          <div class="settings-section">
+            <div class="section-title"><i class="fa-solid fa-user"></i> Homeowner Notifications</div>
+            <div class="form-group">
+              <label class="form-label">Owner Name</label>
+              <input type="text" id="cfg_owner_name" class="form-input" placeholder="Homeowner">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Alert Email Address</label>
+              <input type="email" id="cfg_owner_email" required class="form-input" placeholder="owner@example.com">
+              <span style="font-size: 10px; color: var(--text-faint); margin-top: 3px; display: block;">
+                Intruder photos and breach notifications will be emailed to this address.
+              </span>
+            </div>
+          </div>
+
+          <!-- MySQL Database (PyMySQL) -->
+          <div class="settings-section">
+            <div class="section-title" style="justify-content: space-between;">
+              <span><i class="fa-solid fa-database"></i> MySQL Database</span>
+              <span style="font-size: 10px; background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 2px 6px; border-radius: 4px;">PyMySQL Connected</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Host</label>
+                <input type="text" id="cfg_mysql_host" class="form-input" placeholder="localhost">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Port</label>
+                <input type="number" id="cfg_mysql_port" class="form-input" placeholder="3306">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">User</label>
+                <input type="text" id="cfg_mysql_user" class="form-input" placeholder="root">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="cfg_mysql_password" class="form-input" placeholder="••••••••">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Database Name</label>
+              <input type="text" id="cfg_mysql_db" class="form-input" placeholder="home_intruder_system">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+              <button type="button" onclick="testDbConnection()" class="btn-primary" style="background: #1e293b; border: 1px solid #334155; font-size: 11px;">
+                <i class="fa-solid fa-plug"></i> Test Connection
+              </button>
+              <span id="testDbStatus" style="font-size: 11px;"></span>
+            </div>
+          </div>
+
+          <!-- Email Delivery / SMTP -->
+          <div class="settings-section">
+            <div class="section-title"><i class="fa-solid fa-envelope"></i> SMTP Email Server</div>
+            <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+              <input type="checkbox" id="cfg_smtp_enabled" style="accent-color: #2563eb;">
+              <label for="cfg_smtp_enabled" class="form-label" style="margin: 0; cursor: pointer;">Enable Live SMTP Dispatch</label>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">SMTP Host</label>
+                <input type="text" id="cfg_smtp_host" class="form-input" placeholder="smtp.gmail.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Port</label>
+                <input type="number" id="cfg_smtp_port" class="form-input" placeholder="587">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input type="text" id="cfg_smtp_user" class="form-input" placeholder="you@gmail.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">App Password</label>
+              <input type="password" id="cfg_smtp_password" class="form-input" placeholder="••••••••">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 8px;">
+              <button type="button" onclick="testEmail()" class="btn-primary" style="background: #1e293b; border: 1px solid #334155; font-size: 11px;">
+                <i class="fa-solid fa-paper-plane"></i> Send Test Email
+              </button>
+              <span id="testEmailStatus" style="font-size: 11px;"></span>
+            </div>
+          </div>
+
+          <!-- PIN Code -->
+          <div class="settings-section">
+            <div class="section-title"><i class="fa-solid fa-key"></i> Disarm PIN</div>
+            <div class="form-group">
+              <label class="form-label">Master PIN Code</label>
+              <input type="password" maxlength="6" id="cfg_pin_code" class="form-input" style="width: 120px; letter-spacing: 4px; text-align: center;" value="1234">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 10px;">
+            Save Settings
+          </button>
+        </form>
+
+        <!-- Outbox preview -->
+        <div style="margin-top: 20px;">
+          <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">
+            Dispatched Notifications Outbox
+          </div>
+          <div id="outboxList" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Outbox items -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: ENROLL FAMILY MEMBER -->
+  <div id="enrollModal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Enroll Household Member</h3>
+        <button onclick="closeEnrollModal()" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 16px;">
+        <div style="width: 110px; height: 110px; border-radius: 12px; background: #0f1115; border: 2px dashed #374151; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img id="enrollPreview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+          <div id="enrollPlaceholder" style="text-align: center; color: var(--text-faint); font-size: 11px;">
+            <i class="fa-solid fa-user" style="font-size: 28px; margin-bottom: 4px; display: block;"></i>
+            No Photo
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <button type="button" onclick="captureLiveFaceForEnroll()" class="btn-primary" style="font-size: 11px;">
+            <i class="fa-solid fa-camera"></i> Snapshot from Camera
+          </button>
+          <label class="btn-primary" style="background: #1e293b; border: 1px solid #334155; font-size: 11px; cursor: pointer;">
+            <i class="fa-solid fa-upload"></i> Upload File
+            <input type="file" id="enrollFileInput" accept="image/*" style="display: none;" onchange="handleEnrollFileUpload(event)">
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="enrollName" required placeholder="e.g. Sarah Jenkins" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Relationship / Role</label>
+        <select id="enrollRelationship" class="form-input">
+          <option value="Homeowner">Homeowner / Primary Resident</option>
+          <option value="Spouse">Spouse / Partner</option>
+          <option value="Child">Child</option>
+          <option value="Parent">Parent / Relative</option>
+          <option value="Guest">Frequent Guest</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 18px;">
+        <button type="button" onclick="closeEnrollModal()" class="btn-primary" style="flex: 1; background: #1e293b; border: 1px solid #334155; justify-content: center;">
+          Cancel
+        </button>
+        <button type="button" onclick="submitEnrollment()" id="btnSubmitEnroll" class="btn-primary" style="flex: 1; justify-content: center;">
+          Enroll Face
+        </button>
+      </div>
+      <div id="enrollError" style="font-size: 11px; color: #ef4444; text-align: center; margin-top: 8px; display: none;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: PIN KEYPAD -->
+  <div id="pinModal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 300px; text-align: center;">
+      <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">Security PIN Required</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Enter your master PIN to disarm.</p>
+
+      <input type="password" id="pinInput" readonly maxlength="6" class="form-input" style="font-size: 20px; letter-spacing: 8px; text-align: center; margin-bottom: 8px;" placeholder="••••">
+
+      <div class="keypad-grid">
+        <button onclick="pressPin('1')" class="key-btn">1</button>
+        <button onclick="pressPin('2')" class="key-btn">2</button>
+        <button onclick="pressPin('3')" class="key-btn">3</button>
+        <button onclick="pressPin('4')" class="key-btn">4</button>
+        <button onclick="pressPin('5')" class="key-btn">5</button>
+        <button onclick="pressPin('6')" class="key-btn">6</button>
+        <button onclick="pressPin('7')" class="key-btn">7</button>
+        <button onclick="pressPin('8')" class="key-btn">8</button>
+        <button onclick="pressPin('9')" class="key-btn">9</button>
+        <button onclick="clearPin()" class="key-btn" style="color: #f59e0b; font-size: 11px;">CLR</button>
+        <button onclick="pressPin('0')" class="key-btn">0</button>
+        <button onclick="submitPinAction()" class="key-btn" style="background: #10b981; color: #fff; font-size: 11px;">OK</button>
+      </div>
+
+      <button onclick="closePinModal()" style="margin-top: 14px; background: transparent; border: none; color: var(--text-faint); font-size: 12px; cursor: pointer;">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: IMAGE ZOOM -->
+  <div id="imageZoomModal" class="modal-overlay" onclick="closeImageZoom()">
+    <div class="modal-box" style="max-width: 600px; padding: 12px;" onclick="event.stopPropagation()">
+      <div class="modal-header" style="margin-bottom: 8px;">
+        <span id="zoomCaption" style="font-size: 12px; font-weight: 600; color: #fff;"></span>
+        <button onclick="closeImageZoom()" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <img id="zoomImage" src="" alt="Evidence" style="width: 100%; max-height: 70vh; object-fit: contain; border-radius: 8px;">
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let currentSystemState = "DISARMED";
+    let isAlarmRinging = false;
+    let enrolledFaceBase64 = null;
+    let audioEnabled = true;
+    let audioCtx = null;
+    let sirenOscillator = null;
+
+    // Initialize Theme immediately
+    initTheme();
+
+    setInterval(fetchStatus, 1500);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      fetchStatus();
+      loadFamily();
+      loadEvents();
+      loadSettings();
+      loadOutbox();
+    });
+
+    // --- Theme Management (Light / Dark) ---
+    function initTheme() {
+      const saved = localStorage.getItem("haven_theme");
+      if (saved === "light") {
+        setTheme("light");
+      } else if (saved === "dark") {
+        setTheme("dark");
+      } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
+        setTheme("light");
+      } else {
+        setTheme("dark");
+      }
+    }
+
+    function setTheme(theme) {
+      const btn = document.getElementById("themeToggleBtn");
+      if (theme === "light") {
+        document.body.classList.add("light-mode");
+        localStorage.setItem("haven_theme", "light");
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+      } else {
+        document.body.classList.remove("light-mode");
+        localStorage.setItem("haven_theme", "dark");
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+      }
+    }
+
+    function toggleTheme() {
+      const isLight = document.body.classList.contains("light-mode");
+      setTheme(isLight ? "dark" : "light");
+    }
+
+    // --- Web Audio Siren ---
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      const btn = document.getElementById("audioToggleBtn");
+      if (audioEnabled) {
+        btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+        btn.style.color = "var(--text-muted)";
+      } else {
+        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+        btn.style.color = "#ef4444";
+        stopBrowserSiren();
+      }
+    }
+
+    function startBrowserSiren() {
+      if (!audioEnabled) return;
+      initAudio();
+      if (sirenOscillator) return;
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        const lfo = audioCtx.createOscillator();
+        lfo.frequency.setValueAtTime(2, audioCtx.currentTime);
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        lfo.start();
+        sirenOscillator = { osc, lfo, gain };
+      } catch (e) {}
+    }
+
+    function stopBrowserSiren() {
+      if (sirenOscillator) {
+        try {
+          sirenOscillator.osc.stop();
+          sirenOscillator.lfo.stop();
+        } catch (e) {}
+        sirenOscillator = null;
+      }
+    }
+
+    // --- Tab Switcher ---
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      const btn = document.getElementById(`tabBtn-${tabId.replace("Tab", "")}`);
+      if (btn) btn.classList.add("active");
+
+      if (tabId === 'eventsTab') loadEvents();
+      if (tabId === 'familyTab') loadFamily();
+      if (tabId === 'settingsTab') loadOutbox();
+    }
+
+    // --- Status Polling ---
+    async function fetchStatus() {
+      try {
+        const res = await fetch("/api/status");
+        const data = await res.json();
+        currentSystemState = data.state;
+        isAlarmRinging = data.is_alarm_ringing;
+
+        const badge = document.getElementById("statusBadge");
+        const text = document.getElementById("statusText");
+        const silenceBtn = document.getElementById("sirenSilenceBtn");
+
+        // Update mode switcher buttons active state
+        document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+        if (data.state === "DISARMED") {
+          document.getElementById("btnModeDisarmed").classList.add("active");
+        } else if (data.state === "ARMED_HOME") {
+          document.getElementById("btnModeHome").classList.add("active");
+        } else if (data.state === "ARMED_AWAY") {
+          document.getElementById("btnModeAway").classList.add("active");
+        }
+
+        if (isAlarmRinging) {
+          badge.className = "status-pill alert";
+          text.textContent = "INTRUSION ALERT";
+          silenceBtn.style.display = "flex";
+          startBrowserSiren();
+        } else {
+          stopBrowserSiren();
+          silenceBtn.style.display = "none";
+          if (data.state === "ARMED_AWAY") {
+            badge.className = "status-pill armed-away";
+            text.textContent = "Armed Away";
+          } else if (data.state === "ARMED_HOME") {
+            badge.className = "status-pill armed-home";
+            text.textContent = "Armed Home";
+          } else {
+            badge.className = "status-pill disarmed";
+            text.textContent = "Disarmed";
+          }
+        }
+
+        document.getElementById("statFamilyCount").textContent = data.registered_family;
+        document.getElementById("statIntruderCount").textContent = data.total_intrusions;
+        document.getElementById("statEmailsCount").textContent = data.emails_dispatched;
+        document.getElementById("cameraSourceLabel").textContent = data.is_simulator ? "Virtual Simulator Mode" : "Physical Camera Active";
+      } catch (e) {}
+    }
+
+    // --- Arm / Disarm ---
+    function requestArm(mode) {
+      initAudio();
+      fetch("/api/arm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: mode })
+      }).then(res => res.json()).then(() => fetchStatus());
+    }
+
+    function openPinModal(action) {
+      initAudio();
+      document.getElementById("pinInput").value = "";
+      document.getElementById("pinModal").style.display = "flex";
+    }
+
+    function closePinModal() {
+      document.getElementById("pinModal").style.display = "none";
+    }
+
+    function pressPin(n) {
+      const inp = document.getElementById("pinInput");
+      if (inp.value.length < 6) inp.value += n;
+    }
+
+    function clearPin() {
+      document.getElementById("pinInput").value = "";
+    }
+
+    async function submitPinAction() {
+      const pin = document.getElementById("pinInput").value;
+      if (!pin) return;
+      const res = await fetch("/api/disarm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin: pin })
+      });
+      const data = await res.json();
+      if (data.success) {
+        closePinModal();
+        fetchStatus();
+      } else {
+        alert(data.message);
+        clearPin();
+      }
+    }
+
+    async function triggerPanic() {
+      initAudio();
+      if (confirm("Trigger emergency alarm and notify homeowner?")) {
+        await fetch("/api/panic", { method: "POST" });
+        fetchStatus();
+      }
+    }
+
+    async function silenceSiren() {
+      await fetch("/api/silence", { method: "POST" });
+      stopBrowserSiren();
+      fetchStatus();
+    }
+
+    // --- Simulation ---
+    async function simulateIntruder() {
+      initAudio();
+      await fetch("/api/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "intruder", duration: 12 })
+      });
+      setTimeout(loadEvents, 3000);
+      setTimeout(loadOutbox, 3000);
+    }
+
+    async function simulateFamily() {
+      initAudio();
+      const famRes = await fetch("/api/family");
+      const famData = await famRes.json();
+      const name = (famData.members && famData.members.length > 0) ? famData.members[0].name : "Resident";
+      await fetch("/api/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "family", name: name, duration: 12 })
+      });
+    }
+
+    async function clearSimulation() {
+      await fetch("/api/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "clear" })
+      });
+    }
+
+    // --- Household / Family ---
+    function openEnrollModal() {
+      enrolledFaceBase64 = null;
+      document.getElementById("enrollPreview").style.display = "none";
+      document.getElementById("enrollPlaceholder").style.display = "block";
+      document.getElementById("enrollName").value = "";
+      document.getElementById("enrollError").style.display = "none";
+      document.getElementById("enrollModal").style.display = "flex";
+    }
+
+    function closeEnrollModal() {
+      document.getElementById("enrollModal").style.display = "none";
+    }
+
+    async function snapToEnrollModal() {
+      openEnrollModal();
+      await captureLiveFaceForEnroll();
+    }
+
+    async function captureLiveFaceForEnroll() {
+      try {
+        const res = await fetch("/api/snapshot_current");
+        const data = await res.json();
+        if (data.success) {
+          enrolledFaceBase64 = data.image_base64;
+          const preview = document.getElementById("enrollPreview");
+          preview.src = enrolledFaceBase64;
+          preview.style.display = "block";
+          document.getElementById("enrollPlaceholder").style.display = "none";
+        }
+      } catch (e) {}
+    }
+
+    function handleEnrollFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        enrolledFaceBase64 = e.target.result;
+        const preview = document.getElementById("enrollPreview");
+        preview.src = enrolledFaceBase64;
+        preview.style.display = "block";
+        document.getElementById("enrollPlaceholder").style.display = "none";
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function submitEnrollment() {
+      const name = document.getElementById("enrollName").value.trim();
+      const relationship = document.getElementById("enrollRelationship").value;
+      const err = document.getElementById("enrollError");
+      const btn = document.getElementById("btnSubmitEnroll");
+
+      if (!name) {
+        err.textContent = "Please enter the person's name.";
+        err.style.display = "block";
+        return;
+      }
+      if (!enrolledFaceBase64) {
+        err.textContent = "Please take a camera snapshot or upload a photo.";
+        err.style.display = "block";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      err.style.display = "none";
+
+      try {
+        const res = await fetch("/api/family", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: name, relationship: relationship, image_base64: enrolledFaceBase64 })
+        });
+        const data = await res.json();
+        if (data.success) {
+          closeEnrollModal();
+          loadFamily();
+          fetchStatus();
+        } else {
+          err.textContent = data.message || "Enrollment failed.";
+          err.style.display = "block";
+        }
+      } catch (e) {
+        err.textContent = "Network error: " + e;
+        err.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Enroll Face";
+      }
+    }
+
+    async function loadFamily() {
+      try {
+        const res = await fetch("/api/family");
+        const data = await res.json();
+        const container = document.getElementById("familyList");
+        container.innerHTML = "";
+
+        if (!data.members || data.members.length === 0) {
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 10px; color: var(--text-faint);">
+              <i class="fa-solid fa-users" style="font-size: 32px; margin-bottom: 8px; display: block;"></i>
+              <p style="font-size: 13px;">No household members enrolled yet.</p>
+              <p style="font-size: 11px; margin-top: 4px;">Add family members so the system knows authorized residents.</p>
+            </div>
+          `;
+          return;
+        }
+
+        data.members.forEach(m => {
+          const div = document.createElement("div");
+          div.className = "family-card";
+          div.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="/${m.photo_path}" alt="${m.name}" class="family-avatar" onclick="zoomImage('/${m.photo_path}', '${m.name} (${m.relationship})')">
+              <div class="family-info">
+                <h4>${m.name}</h4>
+                <div class="family-role">${m.relationship}</div>
+              </div>
+            </div>
+            <button class="btn-delete-member" onclick="deleteMember(${m.id}, '${m.name}')" title="Remove member">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {}
+    }
+
+    async function deleteMember(id, name) {
+      if (confirm(`Remove ${name} from enrolled members?`)) {
+        await fetch(`/api/family/${id}`, { method: "DELETE" });
+        loadFamily();
+        fetchStatus();
+      }
+    }
+
+    // --- Activity / Incidents ---
+    async function loadEvents() {
+      try {
+        const res = await fetch("/api/events?limit=30");
+        const data = await res.json();
+        const container = document.getElementById("eventsListContainer");
+        container.innerHTML = "";
+
+        if (!data.events || data.events.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 40px 10px; color: var(--text-faint);">
+              <i class="fa-solid fa-shield-check" style="font-size: 32px; margin-bottom: 8px; display: block; color: #10b981;"></i>
+              <p style="font-size: 13px;">No security incidents recorded.</p>
+              <p style="font-size: 11px; margin-top: 4px;">All detected subjects matched enrolled household members.</p>
+            </div>
+          `;
+          return;
+        }
+
+        data.events.forEach(ev => {
+          const div = document.createElement("div");
+          div.className = "event-item";
+          div.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="/${ev.snapshot_path}" alt="Evidence" class="event-thumb" onclick="zoomImage('/${ev.snapshot_path}', 'Incident at ${ev.timestamp}')">
+              <div class="event-details">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Unrecognized Visitor</h4>
+                <div class="event-meta">${ev.timestamp}</div>
+                <div class="event-tag">${ev.email_sent ? 'Email Alert Dispatched' : 'Logged in Database'}</div>
+              </div>
+            </div>
+            <button onclick="zoomImage('/${ev.snapshot_path}', 'Evidence Snapshot: ${ev.timestamp}')" class="btn-primary" style="background: #1e293b; border: 1px solid #334155; font-size: 11px;">
+              View Photo
+            </button>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) {}
+    }
+
+    // --- Settings & Database ---
+    async function loadSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        const data = await res.json();
+        if (data.settings) {
+          const s = data.settings;
+          document.getElementById("cfg_owner_name").value = s.owner_name || "";
+          document.getElementById("cfg_owner_email").value = s.owner_email || "";
+          document.getElementById("cfg_smtp_enabled").checked = !!s.smtp_enabled;
+          document.getElementById("cfg_smtp_host").value = s.smtp_host || "";
+          document.getElementById("cfg_smtp_port").value = s.smtp_port || 587;
+          document.getElementById("cfg_smtp_user").value = s.smtp_user || "";
+          document.getElementById("cfg_pin_code").value = s.pin_code || "1234";
+
+          // MySQL
+          document.getElementById("cfg_mysql_host").value = s.mysql_host || "localhost";
+          document.getElementById("cfg_mysql_port").value = s.mysql_port || 3306;
+          document.getElementById("cfg_mysql_user").value = s.mysql_user || "root";
+          document.getElementById("cfg_mysql_db").value = s.mysql_db || "home_intruder_system";
+        }
+      } catch (e) {}
+    }
+
+    async function saveSettings(e) {
+      e.preventDefault();
+      const payload = {
+        owner_name: document.getElementById("cfg_owner_name").value,
+        owner_email: document.getElementById("cfg_owner_email").value,
+        smtp_enabled: document.getElementById("cfg_smtp_enabled").checked,
+        smtp_host: document.getElementById("cfg_smtp_host").value,
+        smtp_port: parseInt(document.getElementById("cfg_smtp_port").value) || 587,
+        smtp_user: document.getElementById("cfg_smtp_user").value,
+        pin_code: document.getElementById("cfg_pin_code").value,
+        db_type: "mysql",
+        mysql_host: document.getElementById("cfg_mysql_host").value,
+        mysql_port: parseInt(document.getElementById("cfg_mysql_port").value) || 3306,
+        mysql_user: document.getElementById("cfg_mysql_user").value,
+        mysql_db: document.getElementById("cfg_mysql_db").value
+      };
+      const pass = document.getElementById("cfg_smtp_password").value;
+      if (pass) payload.smtp_password = pass;
+      const dbPass = document.getElementById("cfg_mysql_password").value;
+      if (dbPass !== undefined && dbPass !== "") payload.mysql_password = dbPass;
+
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      alert(data.message || "Settings updated successfully.");
+      loadSettings();
+      fetchStatus();
+    }
+
+    async function testDbConnection() {
+      const status = document.getElementById("testDbStatus");
+      status.textContent = "Connecting...";
+      status.style.color = "#f59e0b";
+
+      const res = await fetch("/api/test_db", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mysql_host: document.getElementById("cfg_mysql_host").value,
+          mysql_port: parseInt(document.getElementById("cfg_mysql_port").value) || 3306,
+          mysql_user: document.getElementById("cfg_mysql_user").value,
+          mysql_password: document.getElementById("cfg_mysql_password").value,
+          mysql_db: document.getElementById("cfg_mysql_db").value
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        status.textContent = "Connected to MySQL successfully";
+        status.style.color = "#10b981";
+      } else {
+        status.textContent = "Connection failed";
+        status.style.color = "#ef4444";
+      }
+    }
+
+    async function testEmail() {
+      const email = document.getElementById("cfg_owner_email").value;
+      const status = document.getElementById("testEmailStatus");
+      status.textContent = "Sending...";
+      status.style.color = "#f59e0b";
+
+      const res = await fetch("/api/test_email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+      });
+      const data = await res.json();
+      if (data.success) {
+        status.textContent = "Test email sent";
+        status.style.color = "#10b981";
+      } else {
+        status.textContent = "Send failed: " + data.message;
+        status.style.color = "#ef4444";
+      }
+      loadOutbox();
+    }
+
+    async function loadOutbox() {
+      try {
+        const res = await fetch("/api/emails");
+        const data = await res.json();
+        const list = document.getElementById("outboxList");
+        list.innerHTML = "";
+        if (!data.emails || data.emails.length === 0) {
+          list.innerHTML = `<span style="font-size: 11px; color: var(--text-faint);">No alert emails logged yet.</span>`;
+          return;
+        }
+        data.emails.forEach(em => {
+          const item = document.createElement("div");
+          item.style.cssText = "background: #15181e; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); font-size: 11px; display: flex; justify-content: space-between; align-items: center;";
+          item.innerHTML = `
+            <div>
+              <strong style="color: #fff; display: block;">${em.subject}</strong>
+              <span style="color: var(--text-faint);">To: ${em.recipient} • ${em.timestamp}</span>
+            </div>
+            <span style="font-weight: 600; color: ${em.status === 'SENT' ? '#10b981' : '#f59e0b'};">${em.status}</span>
+          `;
+          list.appendChild(item);
+        });
+      } catch (e) {}
+    }
+
+    // --- Image Zoom ---
+    function zoomImage(src, caption) {
+      document.getElementById("zoomImage").src = src;
+      document.getElementById("zoomCaption").textContent = caption || "Photo Evidence";
+      document.getElementById("imageZoomModal").style.display = "flex";
+    }
+
+    function closeImageZoom() {
+      document.getElementById("imageZoomModal").style.display = "none";
+    }
+  </script>
+</body>
+</html>
