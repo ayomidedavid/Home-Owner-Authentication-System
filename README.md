@@ -1,6 +1,6 @@
-# 🛡️ Sentinel AI — Home Intruder & Facial Recognition System
+# 🛡️ Home Security System
 
-An intelligent, local home security surveillance and intruder detection system built in Python, OpenCV, and Flask. Sentinel AI enables homeowners to register family members using facial recognition, monitors the home in real time, distinguishes between authorized occupants and unknown intruders, sounds sirens, and instantly captures photo evidence and emails alerts to the homeowner.
+An intelligent, local home security surveillance and intruder detection system built in Python, OpenCV, and Flask. Home Security enables homeowners to register family members using facial recognition, monitors the home in real time, distinguishes between authorized occupants and unknown intruders, sounds sirens, and instantly captures photo evidence and emails alerts to the homeowner.
 
 ---
 
@@ -84,7 +84,7 @@ This will:
 ## 📂 Project Structure
 
 ```
-Home Intruder System/
+Home Security/
 ├── core/
 │   ├── config.py             # Configuration manager (data/config.json)
 │   ├── database.py           # SQLite database layer (data/security.db)

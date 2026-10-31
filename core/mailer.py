@@ -43,7 +43,7 @@ class AlertMailer:
             </div>
             <div class="content">
               <div class="alert-box">
-                <strong style="color: #ef4444;">WARNING:</strong> An unknown person was identified by your Home Intruder System facial recognition scanner. The individual did not match any enrolled family members.
+                <strong style="color: #ef4444;">WARNING:</strong> An unknown person was identified by your Home Security facial recognition scanner. The individual did not match any enrolled family members.
               </div>
 
               <table class="meta-table">
@@ -72,7 +72,7 @@ class AlertMailer:
               </div>
             </div>
             <div class="footer">
-              This automated alert was dispatched by your local Home Intruder Protection System.
+              This automated alert was dispatched by your local Home Security System.
             </div>
           </div>
         </body>
@@ -175,11 +175,11 @@ class AlertMailer:
 
         try:
             msg = MIMEMultipart()
-            msg["Subject"] = "✅ Home Intruder System - Test Notification"
+            msg["Subject"] = "✅ Home Security - Test Notification"
             msg["From"] = smtp_user
             msg["To"] = to_email
             body = """
-            <h2>Home Intruder System - Email Test Successful</h2>
+            <h2>Home Security - Email Test Successful</h2>
             <p>Your email notification settings are configured correctly! You will receive high-priority intruder alerts with photo evidence at this email address whenever an unknown individual is detected.</p>
             """
             msg.attach(MIMEText(body, "html"))

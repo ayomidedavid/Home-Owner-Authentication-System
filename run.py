@@ -34,7 +34,7 @@ def open_browser():
 
 def main():
     print("=" * 65)
-    print(" [SENTINEL AI] HOME INTRUDER & FACIAL RECOGNITION SYSTEM")
+    print(" [HOME SECURITY] INTRUDER & FACIAL RECOGNITION SYSTEM")
     print("=" * 65)
     print(f"[*] Workspace Root: {BASE_DIR}")
     print(f"[*] Data Directory: {DATA_DIR}")

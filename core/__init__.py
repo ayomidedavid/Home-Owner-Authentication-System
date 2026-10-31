@@ -1,1 +1,1 @@
-# Home Intruder System Core Package
+# Home Security System Core Package
